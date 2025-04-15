@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Calculadora HC</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .empresa {
+            text-align: center;
+            padding: 20px 0 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #edc800;
+        }
+
+        .slogan {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-style: italic;
+            color: #ccc;
+        }
+
+        .separator {
+            border-top: 2px solid #555;
+            margin: 10px auto 20px;
+            width: 90%;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #111;
+        }
+
+        h1 {
+            text-align: center;
+            color: #c7a800;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border: 1px solid #555;
+            border-radius: 6px;
+            background-color: #444;
+            color: #fff;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+            background-color: #c7a800;
+            border: none;
+            border-radius: 6px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #edc800;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="empresa">HC SEGUROS E CRÉDITO</div>
+    <div class="slogan">SUA VIDA MAIS SEGURA</div>
+    <div class="separator"></div>
+    <div class="container">
+        <h1>Calculadora de Desconto e Troco</h1>
+
+        <label for="parcela">Valor da Parcela:</label>
+        <input type="text" id="parcela" placeholder="Digite o valor da parcela">
+
+        <label for="parcelas">Número de Parcelas:</label>
+        <input type="text" id="parcelas" placeholder="Digite o número de parcelas">
+
+        <button onclick="limparCampos()">Limpar</button>
+
+        <div class="result" id="resultado"></div>
+    </div>
+
+    <script>
+        function formatarParaNumero(valor) {
+            valor = valor.replace(/\./g, '').replace(',', '.');
+            return parseFloat(valor);
+        }
+
+        function formatarParaBR(valor) {
+            return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function calcular() {
+            const valorParcelaStr = document.getElementById('parcela').value;
+            const parcelasStr = document.getElementById('parcelas').value;
+            const resultadoDiv = document.getElementById('resultado');
+
+            const valorParcela = formatarParaNumero(valorParcelaStr);
+            const parcelas = parseInt(parcelasStr);
+
+            if (!isNaN(valorParcela) && valorParcela > 0 && !isNaN(parcelas) && parcelas > 0) {
+                let desconto = valorParcela >= 600 ? valorParcela * 0.10 : valorParcela * 0.20;
+                let valorComDesconto = valorParcela - desconto;
+                let troco = valorParcela * parcelas;
+
+                resultadoDiv.innerHTML = `
+                    <p>Valor com Desconto: <strong>${formatarParaBR(valorComDesconto)}</strong></p>
+                    <p>Desconto Aplicado: <strong>${formatarParaBR(desconto)}</strong></p>
+                    <p>Troco Total: <strong>${formatarParaBR(troco)}</strong></p>
+                `;
+            } else {
+                resultadoDiv.innerHTML = "Por favor, insira valores válidos.";
+            }
+        }
+
+        function limparCampos() {
+            document.getElementById("parcela").value = '';
+            document.getElementById("parcelas").value = '';
+            document.getElementById("resultado").innerHTML = '';
+        }
+
+        document.getElementById("parcela").addEventListener("input", calcular);
+        document.getElementById("parcelas").addEventListener("input", calcular);
+
+        window.addEventListener("keydown", function(event) {
+            if (event.key === "Escape") {
+                limparCampos();
+            }
+        });
+    </script>
+</body>
+</html>
